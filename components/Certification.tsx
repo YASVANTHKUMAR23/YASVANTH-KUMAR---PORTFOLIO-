@@ -34,7 +34,7 @@ export function Certification() {
 
   useEffect(() => {
     if (!scrollRef.current) return;
-    
+
     const updateRange = () => {
       if (scrollRef.current) {
         const range = scrollRef.current.scrollWidth - window.innerWidth;
@@ -44,14 +44,14 @@ export function Certification() {
     };
 
     updateRange();
-    
+
     const observer = new ResizeObserver(() => {
       updateRange();
     });
-    
+
     observer.observe(scrollRef.current);
     window.addEventListener("resize", updateRange);
-    
+
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", updateRange);
@@ -98,7 +98,7 @@ export function Certification() {
           </motion.div>
 
           {/* Cards Container */}
-          <motion.div ref={scrollRef} style={{ x }} className="flex gap-12 md:gap-24 px-[20px] md:px-[80px] items-center w-max mt-24 md:mt-0">
+          <motion.div ref={scrollRef} style={{ x }} className="flex gap-12 md:gap-24 px-[500px] md:px-[80px] items-center w-max mt-24 md:mt-0">
             {certifications.map((cert, i) => (
               <CertCard key={cert.id} cert={cert} index={i} onClick={() => setSelectedCert(cert)} />
             ))}
@@ -139,7 +139,7 @@ export function Certification() {
                   <p className="text-[#00e1ab] mt-1 text-sm md:text-base font-mono">{selectedCert.issuer} • {selectedCert.date}</p>
                   <p className="text-white/60 mt-3 text-base font-sans max-w-2xl">{selectedCert.desc}</p>
                 </div>
-                <a 
+                <a
                   href={selectedCert.link}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -158,7 +158,7 @@ export function Certification() {
 
 function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-  
+
   // 3D Tilt Effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -198,7 +198,7 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
     >
       {/* Gradient Glow Effect */}
       <div className="absolute -inset-1 bg-gradient-to-r from-[#00e1ab] via-[#6E00FF] to-[#00e1ab] rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 z-0" />
-      
+
       <motion.div
         ref={ref}
         onMouseMove={handleMouseMove}
@@ -215,7 +215,7 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-500" />
 
-        <div 
+        <div
           className="absolute bottom-0 left-0 w-full p-6 md:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
           style={{ transform: "translateZ(50px)" }}
         >

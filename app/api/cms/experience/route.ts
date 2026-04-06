@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Experience } from '@/lib/types';
+import { supabase } from '@/lib/supabase';
 
-// In-memory store for demo purposes
-let experiences: Experience[] = [
+const DEFAULT_EXPERIENCES: Experience[] = [
   {
     id: 1,
     title: "AI & Data Science Engineer",
@@ -32,25 +32,58 @@ let experiences: Experience[] = [
   }
 ];
 
+async function getExperiences(): Promise<Experience[]> {
+  const { data, error } = await supabase
+    .from('portfolio_data')
+    .select('content')
+    .eq('id', 'experience')
+    .single();
+
+  if (error || !data) {
+    await supabase.from('portfolio_data').upsert({ id: 'experience', content: DEFAULT_EXPERIENCES });
+    return DEFAULT_EXPERIENCES;
+  }
+
+  return data.content as Experience[];
+}
+
 export async function GET() {
+  const experiences = await getExperiences();
   return NextResponse.json(experiences);
 }
 
 export async function POST(request: Request) {
+  const experiences = await getExperiences();
   const data = await request.json();
   const newExperience = { ...data, id: Date.now() };
-  experiences.push(newExperience);
+  
+  const updatedExperiences = [...experiences, newExperience];
+  await supabase.from('portfolio_data').update({ content: updatedExperiences }).eq('id', 'experience');
+  
   return NextResponse.json(newExperience);
 }
 
 export async function PUT(request: Request) {
+  const experiences = await getExperiences();
   const data = await request.json();
-  experiences = experiences.map(exp => exp.id === data.id ? data : exp);
+  
+  const updatedExperiences = experiences.map(exp => exp.id === data.id ? data : exp);
+  await supabase.from('portfolio_data').update({ content: updatedExperiences }).eq('id', 'experience');
+  
   return NextResponse.json(data);
 }
 
 export async function DELETE(request: Request) {
-  const { id } = await request.json();
-  experiences = experiences.filter(exp => exp.id !== id);
-  return NextResponse.json({ success: true });
+  const experiences = await getExperiences();
+  const { searchParams } = new URL(request.url);
+  const idStr = searchParams.get('id');
+  const id = idStr ? parseInt(idStr) : null;
+  
+  if (id !== null) {
+    const updatedExperiences = experiences.filter(exp => exp.id !== id);
+    await supabase.from('portfolio_data').update({ content: updatedExperiences }).eq('id', 'experience');
+    return NextResponse.json({ success: true });
+  }
+  
+  return NextResponse.json({ error: 'ID is required' }, { status: 400 });
 }

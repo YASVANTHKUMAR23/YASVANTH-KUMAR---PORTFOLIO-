@@ -175,7 +175,7 @@ export default function Page() {
 
   const [heroData, setHeroData] = useState<HeroData>({
     name: "YASVANTH",
-    imageSrc: "https://raw.githubusercontent.com/YASVANTHKUMAR23/AI-STUDIO/main/20260404_1638_Image%20Generation_remix_01knc2t9qnf878rsqwy7fjkq0z.png",
+    imageSrc: "/avatar.png",
     leftText: "AI & Data Science Engineer specializing in Agentic AI and LLM Orchestration. Expert in Python, n8n, and RAG,",
     rightText: "delivering real-world solutions like WhatsApp health bots and automated ML classifiers. SIH Grand Finalist with a focus on high-impact healthcare automation and industrial-grade Gen AI implementation.",
     twitterUrl: "#",
