@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'img.icons8.com',
         port: '',
         pathname: '/**', 
+      },
+      {
+        protocol: 'https',
+        hostname: 'ohheyehupsknesvivagk.supabase.co',
+        port: '',
+        pathname: '/**', 
       }
     ],
   },

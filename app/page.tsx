@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { Twitter, Instagram, Youtube, ArrowUpRight, Menu, X } from 'lucide-react';
+import { Twitter, Instagram, Youtube, ArrowUpRight, Menu, X, FileDown } from 'lucide-react';
 import { Login } from '@/components/Login';
 import { CMS, HeroData } from '@/components/CMS';
 import { Certification } from '@/components/Certification';
@@ -209,6 +209,21 @@ export default function Page() {
       return () => clearTimeout(timer);
     }
   }, [introState]);
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const res = await fetch('/api/cms/hero');
+        if (res.ok) {
+          const data = await res.json();
+          setHeroData(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch hero data:', error);
+      }
+    };
+    fetchHeroData();
+  }, []);
 
   useEffect(() => {
     if (clickCount > 0) {
@@ -466,9 +481,21 @@ export default function Page() {
                 <p className="text-white text-base sm:text-lg leading-relaxed font-sans font-medium drop-shadow-md /* R */">
                   {heroData.rightText}
                 </p>
-                <a href={heroData.buttonUrl} className="w-full sm:w-auto h-[44px] px-6 rounded-full bg-[#6E00FF] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#8B33FF] transition-colors shadow-lg shadow-[#6E00FF]/20 /* R */">
-                  {heroData.buttonText} <ArrowUpRight size={18} />
-                </a>
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                  <a href={heroData.buttonUrl} className="flex-1 sm:w-auto h-[44px] px-6 rounded-full bg-[#6E00FF] text-white font-medium flex items-center justify-center gap-2 hover:bg-[#8B33FF] transition-colors shadow-lg shadow-[#6E00FF]/20">
+                    {heroData.buttonText} <ArrowUpRight size={18} />
+                  </a>
+                  {heroData.resumeUrl && (
+                    <a 
+                      href={heroData.resumeUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex-1 sm:w-auto h-[44px] px-6 rounded-full bg-white/10 text-white font-medium flex items-center justify-center gap-2 hover:bg-white/20 transition-colors border border-white/10"
+                    >
+                      Resume <FileDown size={18} />
+                    </a>
+                  )}
+                </div>
               </motion.div>
 
             </div>

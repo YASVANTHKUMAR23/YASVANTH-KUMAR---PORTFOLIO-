@@ -41,13 +41,15 @@ const MacMenuBar = () => (
   <div
     className="w-full h-5 flex items-center justify-between px-2 flex-shrink-0 z-10"
     style={{
-      background: "rgba(255, 255, 255, 0.25)",
-      backdropFilter: "blur(20px)",
-      WebkitBackdropFilter: "blur(20px)",
+      background: "rgba(255, 255, 255, 0.2)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)",
+      transform: "translateZ(0)",
     }}
   >
     {/* Left side */}
-    <div className="flex items-center gap-2 text-white text-[6px] font-medium">
+    <div className="flex items-center gap-2 text-white text-[6px] font-medium leading-none">
       <span style={{ fontSize: "7px" }}>&#63743;</span>
       <span className="font-bold">Finder</span>
       <span>File</span>
@@ -59,7 +61,7 @@ const MacMenuBar = () => (
     </div>
 
     {/* Right side — status icons */}
-    <div className="flex items-center gap-1 text-white text-[6px]">
+    <div className="flex items-center gap-1.5 text-white text-[6px]">
       <svg width="6" height="6" viewBox="0 0 24 24" fill="white">
         <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
       </svg>
@@ -101,21 +103,22 @@ const MacDock = () => {
 
   return (
     <div
-      className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-end gap-[3px] px-2 py-1 rounded-2xl z-20 flex-shrink-0"
+      className="absolute bottom-1 left-1/2 flex items-end gap-[3px] px-2 py-1 rounded-2xl z-20 flex-shrink-0"
       style={{
         background: "rgba(255, 255, 255, 0.2)",
-        backdropFilter: "blur(30px)",
-        WebkitBackdropFilter: "blur(30px)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         border: "0.5px solid rgba(255, 255, 255, 0.4)",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
+        transform: "translateX(-50%) translateZ(0)", // Combined translate hooks for proper centering + GPU
       }}
     >
       {dockApps.map((app, index) => (
         <div
           key={app.name}
-          className="relative w-8 h-8 rounded-[6px] flex items-center justify-center shadow-sm cursor-pointer overflow-hidden"
+          className="relative w-8 h-8 rounded-[6px] flex items-center justify-center shadow-sm cursor-pointer overflow-hidden transform-gpu"
           style={{
-            transform: `scale(${getScale(index)})`,
+            transform: `scale(${getScale(index)}) translateZ(0)`,
             transition: "transform 0.15s ease",
             transformOrigin: "bottom",
           }}
@@ -139,35 +142,37 @@ export const FinderDesktop = ({
 }) => {
   return (
     <div
-      className="relative w-full h-full flex flex-col select-none overflow-hidden"
+      className="relative w-full h-full flex flex-col select-none overflow-hidden transform-gpu backface-hidden"
       style={{
         backgroundImage: "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        transform: "translateZ(0)", 
       }}
     >
-      {/* 1. Menu Bar — top, frosted glass */}
+      {/* 1. Menu Bar */}
       <MacMenuBar />
 
-      {/* 2. Desktop area — folders over wallpaper */}
-      <div className="relative flex-1 p-6">
-        <div className="grid grid-cols-4 gap-x-4 gap-y-8 auto-rows-min max-w-full">
+      {/* 2. Desktop area */}
+      <div className="relative flex-1 p-6 overflow-hidden transform-gpu">
+        <div 
+          className="grid grid-cols-4 gap-x-4 gap-y-8 auto-rows-min max-w-full"
+          style={{ transform: "translateZ(0)" }}
+        >
           {data.map((project) => (
             <motion.div
-              layoutId={project.id}
               key={project.id}
-              className="flex flex-col items-center cursor-pointer group w-20 h-20"
+              className="flex flex-col items-center cursor-pointer group w-20 h-20 will-change-transform"
+              style={{ transform: "translateZ(0)" }}
               onClick={(e) => {
                 e.stopPropagation();
                 onFolderClick(project);
               }}
             >
-              {/* Highlight ring on hover */}
               <div className="p-1 rounded-lg group-hover:bg-white/20 transition-colors">
                 <MacFolderIcon />
               </div>
-              <motion.span
-                layoutId={`folder-label-${project.id}`}
+              <span
                 className="text-white text-[9px] font-medium text-center mt-1 px-1.5 py-0.5 rounded leading-tight line-clamp-2"
                 style={{
                   textShadow: "0px 1px 3px rgba(0,0,0,0.9)",
@@ -176,13 +181,13 @@ export const FinderDesktop = ({
                 }}
               >
                 {project.folderLabel || project.title || "Untitled"}
-              </motion.span>
+              </span>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* 3. Dock — bottom, frosted glass with magnification */}
+      {/* 3. Dock */}
       <MacDock />
     </div>
   );

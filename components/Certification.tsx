@@ -8,11 +8,11 @@ import { Certification as CertificationType } from '@/lib/types';
 
 export function Certification() {
   const [certifications, setCertifications] = useState<CertificationType[]>([]);
-  const [selectedCert, setSelectedCert] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const targetRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const fetchCertifications = async () => {
       try {
         const res = await fetch('/api/cms/certifications');
@@ -29,8 +29,30 @@ export function Certification() {
     fetchCertifications();
   }, []);
 
-  const [scrollRange, setScrollRange] = useState(0);
+  if (!mounted || loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#030303]">
+        <div className="text-[#00e1ab] animate-pulse">Loading certifications...</div>
+      </div>
+    );
+  }
+
+  if (certifications.length === 0) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#030303]">
+        <div className="text-white/50">No certifications found.</div>
+      </div>
+    );
+  }
+
+  return <CertificationContent certifications={certifications} />;
+}
+
+function CertificationContent({ certifications }: { certifications: CertificationType[] }) {
+  const [selectedCert, setSelectedCert] = useState<any>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollRange, setScrollRange] = useState(0);
 
   useEffect(() => {
     if (!scrollRef.current) return;
@@ -38,17 +60,12 @@ export function Certification() {
     const updateRange = () => {
       if (scrollRef.current) {
         const range = scrollRef.current.scrollWidth - window.innerWidth;
-        // Add a bit of extra padding at the end, and ensure it's not negative
         setScrollRange(Math.max(0, range + 100));
       }
     };
 
     updateRange();
-
-    const observer = new ResizeObserver(() => {
-      updateRange();
-    });
-
+    const observer = new ResizeObserver(updateRange);
     observer.observe(scrollRef.current);
     window.addEventListener("resize", updateRange);
 
@@ -64,47 +81,44 @@ export function Certification() {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -scrollRange]);
-  const textX = useTransform(scrollYProgress, [0, 1], ["0vw", "-100vw"]);
+  const textX = useTransform(scrollYProgress, [0, 0.4, 1], ["0vw", "-20vw", "-100vw"]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.6], [1, 1, 0]);
 
-  // Calculate dynamic height based on number of items to ensure smooth scrolling without empty space
-  const sectionHeight = certifications.length > 0 ? `${100 + (certifications.length * 50)}vh` : "100vh";
+  const sectionHeight = `${100 + (certifications.length * 50)}vh`;
 
   return (
     <section id="certificates" ref={targetRef} style={{ height: sectionHeight }} className="relative bg-[#030303] border-t border-white/5 z-30">
-      {loading ? (
-        <div className="h-screen flex items-center justify-center">
-          <div className="text-[#00e1ab] animate-pulse">Loading certifications...</div>
-        </div>
-      ) : certifications.length === 0 ? (
-        <div className="h-screen flex items-center justify-center">
-          <div className="text-white/50">No certifications found.</div>
-        </div>
-      ) : (
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-          {/* Text Container animated to slide out in sync with cards */}
-          <motion.div style={{ x: textX }} className="absolute top-[100px] md:top-[120px] left-[20px] md:left-[80px] w-auto md:w-[40vw] z-50 pointer-events-none pr-8">
-            <motion.h2
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="flex items-baseline text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter text-white"
-            >
-              <span className="font-accent italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#00e1ab] to-[#6E00FF] pr-1">Certi</span>
-              <span>fications</span>
-            </motion.h2>
-            <p className="mt-4 text-white/60 font-sans text-base md:text-lg leading-[1.6] tracking-wide max-w-xl">
-              Verified skills and professional achievements. Scroll to explore my certifications.
-            </p>
-          </motion.div>
+      <div className="sticky top-0 flex h-screen items-start overflow-hidden">
+        {/* Text Container */}
+        <motion.div 
+          style={{ x: textX, opacity: textOpacity }} 
+          className="absolute top-[60px] md:top-[80px] left-[20px] md:left-[80px] w-full md:w-[45vw] z-50 pointer-events-none pr-8"
+        >
+          <motion.h2
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex items-baseline text-4xl md:text-6xl lg:text-8xl font-display font-bold tracking-tighter text-white uppercase"
+          >
+            <span className="font-accent italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#00e1ab] to-[#6E00FF] pr-1">Certi</span>
+            <span>fications</span>
+          </motion.h2>
+          <p className="mt-6 text-white/50 font-instrument text-lg md:text-xl leading-relaxed max-w-xl">
+            Verified skills and professional achievements. Scroll horizontally to explore my journey.
+          </p>
+        </motion.div>
 
-          {/* Cards Container */}
-          <motion.div ref={scrollRef} style={{ x }} className="flex gap-12 md:gap-24 px-[500px] md:px-[80px] items-center w-max mt-24 md:mt-0">
-            {certifications.map((cert, i) => (
-              <CertCard key={cert.id} cert={cert} index={i} onClick={() => setSelectedCert(cert)} />
-            ))}
-          </motion.div>
-        </div>
-      )}
+        {/* Cards Container */}
+        <motion.div 
+          ref={scrollRef} 
+          style={{ x }} 
+          className="flex gap-12 md:gap-24 px-[50px] md:px-[80px] items-center w-max pt-[35vh] md:pt-[40vh]"
+        >
+          {certifications.map((cert, i) => (
+            <CertCard key={cert.id} cert={cert} index={i} onClick={() => setSelectedCert(cert)} />
+          ))}
+        </motion.div>
+      </div>
 
       {/* Zoom Modal */}
       <AnimatePresence>
@@ -113,7 +127,7 @@ export function Certification() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/90 backdrop-blur-xl"
             onClick={() => setSelectedCert(null)}
           >
             <motion.div
@@ -131,22 +145,28 @@ export function Certification() {
                 <X size={24} />
               </button>
               <div className="relative flex-1 w-full bg-black/40">
-                <Image src={selectedCert.img} alt={selectedCert.title} fill className="object-contain p-4 md:p-8" unoptimized />
+                {selectedCert.img ? (
+                  <Image src={selectedCert.img} alt={selectedCert.title} fill className="object-contain p-4 md:p-8" unoptimized />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-white/20">Missing Image</div>
+                )}
               </div>
               <div className="p-6 md:p-8 bg-white/5 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-2xl md:text-3xl font-display font-bold text-white">{selectedCert.title}</h3>
-                  <p className="text-[#00e1ab] mt-1 text-sm md:text-base font-mono">{selectedCert.issuer} • {selectedCert.date}</p>
+                  <p className="text-[#00e1ab] mt-1 text-sm md:text-base font-mono uppercase tracking-widest">{selectedCert.issuer} • {selectedCert.date}</p>
                   <p className="text-white/60 mt-3 text-base font-sans max-w-2xl">{selectedCert.desc}</p>
                 </div>
-                <a
-                  href={selectedCert.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-[#6E00FF] hover:bg-[#8B33FF] text-white rounded-full font-medium transition-colors whitespace-nowrap"
-                >
-                  View Credential <ExternalLink size={18} />
-                </a>
+                {selectedCert.link && (
+                  <a
+                    href={selectedCert.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#6E00FF] hover:bg-[#8B33FF] text-white rounded-full font-medium transition-colors whitespace-nowrap shadow-lg shadow-[#6E00FF]/20"
+                  >
+                    View Credential <ExternalLink size={18} />
+                  </a>
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -158,13 +178,11 @@ export function Certification() {
 
 function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const xValue = useMotionValue(0);
+  const yValue = useMotionValue(0);
 
-  // 3D Tilt Effect
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+  const mouseXSpring = useSpring(xValue, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(yValue, { stiffness: 300, damping: 30 });
 
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
@@ -172,19 +190,13 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
+    xValue.set(e.clientX - rect.left / rect.width - 0.5);
+    yValue.set(e.clientY - rect.top / rect.height - 0.5);
   };
 
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    xValue.set(0);
+    yValue.set(0);
   };
 
   return (
@@ -196,9 +208,7 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
       className="relative group cursor-pointer w-[85vw] md:w-[500px] shrink-0 [perspective:1000px]"
       onClick={onClick}
     >
-      {/* Gradient Glow Effect */}
       <div className="absolute -inset-1 bg-gradient-to-r from-[#00e1ab] via-[#6E00FF] to-[#00e1ab] rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 z-0" />
-
       <motion.div
         ref={ref}
         onMouseMove={handleMouseMove}
@@ -206,19 +216,15 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] z-10"
       >
-        <Image
-          src={cert.img}
-          alt={cert.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-          unoptimized
-        />
+        {cert.img ? (
+          <Image src={cert.img} alt={cert.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" unoptimized />
+        ) : (
+          <div className="absolute inset-0 bg-white/5 flex items-center justify-center">
+            <span className="text-white/20 font-mono text-xs">No Image</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-500" />
-
-        <div
-          className="absolute bottom-0 left-0 w-full p-6 md:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
-          style={{ transform: "translateZ(50px)" }}
-        >
+        <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500" style={{ transform: "translateZ(50px)" }}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-[#00e1ab] font-mono text-xs uppercase tracking-wider">{cert.issuer}</span>
             <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-x-4 group-hover:translate-x-0">
@@ -234,4 +240,3 @@ function CertCard({ cert, index, onClick }: { cert: any, index: number, onClick:
     </motion.div>
   );
 }
-

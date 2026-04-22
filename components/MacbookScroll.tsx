@@ -43,9 +43,10 @@ export const MacbookScroll = ({
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 20,
-    restDelta: 0.001
+    stiffness: 30, // Lower stiffness to absorb fast scroll jitters
+    damping: 30,   // Balanced damping
+    mass: 1,
+    restDelta: 0.001,
   });
 
   const [isMobile, setIsMobile] = useState(false);
@@ -72,21 +73,22 @@ export const MacbookScroll = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const scaleX = useTransform(smoothProgress, [0, 0.3], [1.2, 1.5]);
-  const scaleY = useTransform(smoothProgress, [0, 0.3], [0.6, 1.5]);
+  const scaleX = useTransform(smoothProgress, [0, 0.15, 0.4], [1.2, 1.35, 1.5]);
+  const scaleY = useTransform(smoothProgress, [0, 0.15, 0.4], [0.6, 1.0, 1.5]);
   const translate = useTransform(
     smoothProgress,
     [0, 1],
-    [0, isMobile ? 2200 : isTablet ? 1800 : 1500]
+    [0, isMobile ? 2000 : isTablet ? 1700 : 1500]
   );
-  const rotate = useTransform(smoothProgress, [0.1, 0.12, 0.3], [-28, -28, 0]);
+  const rotate = useTransform(smoothProgress, [0, 0.08, 0.35], [-28, -28, 0]);
   const textTransform = useTransform(smoothProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
 
   return (
     <div
       ref={ref}
-      className="flex min-h-[200vh] sm:min-h-[250vh] lg:min-h-[300vh] shrink-0 scale-[0.45] sm:scale-[0.75] lg:scale-100 transform flex-col items-center justify-start py-10 lg:py-40 [perspective:800px]"
+      className="flex min-h-[200vh] sm:min-h-[250vh] lg:min-h-[300vh] shrink-0 scale-[0.45] sm:scale-[0.75] lg:scale-100 transform flex-col items-center justify-start py-10 lg:py-40 [perspective:1000px] will-change-transform"
+      style={{ transform: "translateZ(0)" }}
     >
       <motion.h2
         style={{

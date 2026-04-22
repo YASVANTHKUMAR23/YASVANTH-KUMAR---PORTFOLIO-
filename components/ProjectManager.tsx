@@ -10,6 +10,7 @@ import {
   X,
   Save
 } from 'lucide-react';
+import { FileUpload } from './FileUpload';
 
 export function ProjectManager() {
   const [items, setItems] = useState<Project[]>([]);
@@ -75,6 +76,10 @@ export function ProjectManager() {
     const techString = e.target.value;
     const techArray = techString.split(',').map(t => t.trim()).filter(t => t !== '');
     setFormData(prev => ({ ...prev, tech: techArray }));
+  };
+
+  const handleImageUpload = (url: string) => {
+    setFormData(prev => ({ ...prev, imageUrl: url }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -234,14 +239,10 @@ export function ProjectManager() {
                     />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-medium text-white/70">Image URL *</label>
-                    <input 
-                      required
-                      type="text" 
-                      name="imageUrl" 
-                      value={formData.imageUrl || ''} 
-                      onChange={handleChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#00e1ab]"
+                    <FileUpload 
+                      label="Project Image" 
+                      currentValue={formData.imageUrl} 
+                      onUploadComplete={handleImageUpload} 
                     />
                   </div>
                   <div className="space-y-2 md:col-span-2">

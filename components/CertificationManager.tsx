@@ -3,18 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Pencil, Trash2, Save, X, Image as ImageIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Certification } from '@/lib/types';
+import { FileUpload } from './FileUpload';
 
 export function CertificationManager() {
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentCert, setCurrentCert] = useState<Partial<Certification>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchCertifications();
   }, []);
+
+  const handleImageUpload = (url: string) => {
+    setCurrentCert(prev => ({ ...prev, img: url }));
+  };
 
   const fetchCertifications = async () => {
     try {
@@ -29,6 +35,7 @@ export function CertificationManager() {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
       const method = currentCert.id ? 'PUT' : 'POST';
       const response = await fetch('/api/cms/certifications', {
@@ -44,6 +51,8 @@ export function CertificationManager() {
       }
     } catch (error) {
       console.error('Failed to save certification:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -184,13 +193,10 @@ export function CertificationManager() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Image URL</label>
-                  <input
-                    type="text"
-                    value={currentCert.img || ''}
-                    onChange={e => setCurrentCert({...currentCert, img: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-[#00e1ab] outline-none"
-                    placeholder="https://..."
+                  <FileUpload 
+                    label="Certification Image" 
+                    currentValue={currentCert.img} 
+                    onUploadComplete={handleImageUpload} 
                   />
                 </div>
 
@@ -215,10 +221,11 @@ export function CertificationManager() {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="px-6 py-2 bg-[#00e1ab] hover:bg-[#00f0b7] text-[#004a36] font-bold rounded-lg flex items-center gap-2 transition-colors"
+                  disabled={isSaving}
+                  className="px-6 py-2 bg-[#00e1ab] hover:bg-[#00f0b7] text-[#004a36] font-bold rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50"
                 >
-                  <Save size={18} />
-                  Save
+                  {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save size={18} />}
+                  {isSaving ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </div>
