@@ -5,16 +5,22 @@ import { motion } from 'motion/react';
 import { Mail, MessageSquare, Send, User, MapPin } from 'lucide-react';
 import { ContactData } from './ContactManager';
 
-export function ContactSection() {
-  const [data, setData] = useState<ContactData | null>(null);
+interface ContactSectionProps {
+  data?: any;
+}
+
+export function ContactSection({ data: initialData }: ContactSectionProps) {
+  const [data, setData] = useState<ContactData | null>(initialData || null);
 
   useEffect(() => {
-    fetch('/api/cms/contact')
-      .then(res => res.json())
-      .then(d => {
-        if (d && !d.error) setData(d);
-      });
-  }, []);
+    if (!initialData) {
+      fetch('/api/cms/contact')
+        .then(res => res.json())
+        .then(d => {
+          if (d && !d.error) setData(d);
+        });
+    }
+  }, [initialData]);
 
   if (!data) return null;
 
