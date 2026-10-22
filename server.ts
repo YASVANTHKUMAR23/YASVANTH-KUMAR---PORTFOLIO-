@@ -1,6 +1,7 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
@@ -257,14 +258,24 @@ ${message}
     });
   });
 
-  // In production, serve built static files from dist
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve(__dirname, 'dist')));
-    app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+  // Serve static assets from src/assets/images and public as fallback for any legacy asset path
+  app.use('/src/assets/images', express.static(path.resolve(__dirname, 'src/assets/images')));
+  app.use(express.static(path.resolve(__dirname, 'public')));
+
+  const distDir = path.resolve(__dirname, 'dist');
+  const hasDist = fs.existsSync(path.resolve(distDir, 'index.html'));
+
+  // In production or when dist build is present, serve built static files from dist
+  if (process.env.NODE_ENV === 'production' || hasDist) {
+    app.use(express.static(distDir));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      res.sendFile(path.resolve(distDir, 'index.html'));
     });
   } else {
-    // In dev, use Vite middleware
+    // In dev without pre-built dist, use Vite middleware
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Send, CheckCircle2, Copy, Check, MessageSquare, ArrowUpRight, Github, Sparkles } from 'lucide-react';
 import { BorderBeam } from '@/components/ui/border-beam';
+import { sendContactMessage } from '../lib/emailService';
 
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -45,45 +46,25 @@ export const Contact: React.FC = () => {
     setDeliveryResult(null);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const result = await sendContactMessage({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
       });
 
-      const data = await response.json().catch(() => ({}));
-
-      if (data.emailDelivered) {
+      if (result.emailDelivered) {
         setIsSubmitted(true);
         setDeliveryResult({
           delivered: true,
-          method: data.method,
+          method: result.method,
         });
         setFormData({ name: '', email: '', subject: 'AI / Software Collaboration', message: '' });
       } else {
-        // Background delivery needs keys or fell back to direct mailto/Gmail
-        const mailtoFallback =
-          data.mailtoUrl ||
-          `mailto:${emailAddress}?subject=${encodeURIComponent(
-            `[Portfolio] ${formData.subject} - ${formData.name}`
-          )}&body=${encodeURIComponent(
-            `Name: ${formData.name}\nEmail: ${formData.email}\nSubject: ${formData.subject}\n\nMessage:\n${formData.message}`
-          )}`;
-        const gmailFallback =
-          data.gmailComposeUrl ||
-          `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=${encodeURIComponent(
-            `[Portfolio] ${formData.subject} - ${formData.name}`
-          )}&body=${encodeURIComponent(
-            `Name: ${formData.name}\nEmail: ${formData.email}\nSubject: ${formData.subject}\n\nMessage:\n${formData.message}`
-          )}`;
-
         setDeliveryResult({
           delivered: false,
-          mailtoUrl: mailtoFallback,
-          gmailComposeUrl: gmailFallback,
-          missingKeys: data.missingKeys || ['EMAILJS_PUBLIC_KEY', 'EMAILJS_TEMPLATE_ID'],
+          mailtoUrl: result.mailtoUrl,
+          gmailComposeUrl: result.gmailComposeUrl,
         });
       }
     } catch (err: any) {
@@ -361,11 +342,6 @@ export const Contact: React.FC = () => {
                     >
                       Edit details
                     </button>
-                  </div>
-
-                  {/* Configuration note for the portfolio owner */}
-                  <div className="p-3 bg-amber-50/80 border border-amber-200/70 rounded-xl text-[11px] text-amber-900 leading-relaxed">
-                    <span className="font-bold">Portfolio Owner Note:</span> Service ID (<code className="font-mono font-bold">service_jvlpok3</code>) is connected. To deliver 100% silently in the background without opening the sender's mail client, add <code className="font-mono bg-amber-100 px-1 rounded">EMAILJS_PUBLIC_KEY</code> and <code className="font-mono bg-amber-100 px-1 rounded">EMAILJS_TEMPLATE_ID</code> in AI Studio Secrets (or add <code className="font-mono bg-amber-100 px-1 rounded">GMAIL_APP_PASSWORD</code>).
                   </div>
                 </div>
               ) : isSubmitted ? (

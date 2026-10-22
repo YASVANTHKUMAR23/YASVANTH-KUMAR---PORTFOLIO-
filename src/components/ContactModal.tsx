@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Check, Copy, Send, Github, MapPin, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { sendContactMessage } from '../lib/emailService';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -51,41 +52,20 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
     setDeliveryResult(null);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.projectType,
-          message: formData.message,
-        }),
+      const result = await sendContactMessage({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.projectType,
+        message: formData.message,
       });
 
-      const data = await response.json().catch(() => ({}));
-
-      if (data.emailDelivered) {
+      if (result.emailDelivered) {
         setSubmitted(true);
       } else {
-        const mailtoFallback =
-          data.mailtoUrl ||
-          `mailto:${emailAddress}?subject=${encodeURIComponent(
-            `[Portfolio] ${formData.projectType} - ${formData.name}`
-          )}&body=${encodeURIComponent(
-            `Name: ${formData.name}\nEmail: ${formData.email}\nSubject: ${formData.projectType}\n\nMessage:\n${formData.message}`
-          )}`;
-        const gmailFallback =
-          data.gmailComposeUrl ||
-          `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=${encodeURIComponent(
-            `[Portfolio] ${formData.projectType} - ${formData.name}`
-          )}&body=${encodeURIComponent(
-            `Name: ${formData.name}\nEmail: ${formData.email}\nSubject: ${formData.projectType}\n\nMessage:\n${formData.message}`
-          )}`;
-
         setDeliveryResult({
           delivered: false,
-          mailtoUrl: mailtoFallback,
-          gmailComposeUrl: gmailFallback,
+          mailtoUrl: result.mailtoUrl,
+          gmailComposeUrl: result.gmailComposeUrl,
         });
       }
     } catch (err: any) {

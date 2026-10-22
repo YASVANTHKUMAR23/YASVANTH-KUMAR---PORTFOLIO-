@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowUpRight, Github, ExternalLink, X, GraduationCap, Code2, Sparkles, MapPin, Award, Terminal } from 'lucide-react';
+import aboutPortraitImg from '../assets/images/about_portrait_1791119468485.jpg';
 
 interface AboutProps {
   onNavigateToProjects?: () => void;
@@ -28,8 +29,8 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
   const bgAuraY = useTransform(smoothProgress, [0, 1], [-80, 80]);
 
   // Portrait image source with fallback
-  const [portraitSrc, setPortraitSrc] = useState(
-    '/src/assets/images/about_portrait_1791119468485.jpg'
+  const [portraitSrc, setPortraitSrc] = useState<string>(
+    aboutPortraitImg || '/about_portrait_1791119468485.jpg'
   );
 
   return (
