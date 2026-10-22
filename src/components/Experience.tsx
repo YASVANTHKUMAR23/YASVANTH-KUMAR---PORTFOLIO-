@@ -645,31 +645,31 @@ export default function ExperienceSection() {
       {/* Interactive Milestone Card Preview Modal */}
       {previewImage && (
         <div
-          className="fixed inset-0 z-[10000] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[10000] bg-black/75 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in duration-200"
           onClick={() => setPreviewImage(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 relative animate-in zoom-in-95 duration-200"
+            className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full p-3.5 sm:p-6 shadow-2xl border border-slate-200 relative my-auto max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-              <div>
-                <h4 className="text-base sm:text-lg font-bold text-[#0a0f1c]">{previewImage.title}</h4>
-                <p className="text-xs text-[#2563eb] font-semibold mt-0.5">{previewImage.tag}</p>
+            <div className="flex items-center justify-between pb-2.5 sm:pb-3 mb-2.5 sm:mb-3 border-b border-slate-100 shrink-0">
+              <div className="pr-4">
+                <h4 className="text-sm sm:text-lg font-bold text-[#0a0f1c] line-clamp-1 sm:line-clamp-none">{previewImage.title}</h4>
+                <p className="text-[11px] sm:text-xs text-[#2563eb] font-semibold mt-0.5 line-clamp-1 sm:line-clamp-none">{previewImage.tag}</p>
               </div>
               <button
                 onClick={() => setPreviewImage(null)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
+                className="p-1 sm:p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer shrink-0"
                 aria-label="Close preview"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
-            <div className="w-full max-h-[70vh] flex items-center justify-center bg-slate-50/70 rounded-2xl p-2 sm:p-4 overflow-hidden border border-slate-100">
+            <div className="w-full max-h-[60vh] sm:max-h-[70vh] flex items-center justify-center bg-slate-50/70 rounded-xl sm:rounded-2xl p-1.5 sm:p-4 overflow-hidden border border-slate-100">
               <img
                 src={previewImage.src}
                 alt={previewImage.title}
-                className="max-h-[65vh] w-auto max-w-full object-contain rounded-lg shadow-sm"
+                className="max-h-[56vh] sm:max-h-[65vh] w-auto max-w-full object-contain rounded-lg shadow-sm"
               />
             </div>
           </div>

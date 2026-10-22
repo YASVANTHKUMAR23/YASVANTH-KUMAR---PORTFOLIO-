@@ -42,22 +42,28 @@ async function startServer() {
         process.env.Email_JS ||
         process.env.EMAILJS_SERVICE_ID ||
         process.env.EMAIL_JS_SERVICE_ID ||
+        process.env.EMAIL_SERVICE_ID ||
         'service_jvlpok3';
       const publicKey =
         process.env.EMAILJS_PUBLIC_KEY ||
         process.env.Email_JS_Public_Key ||
         process.env.EMAIL_JS_PUBLIC_KEY ||
+        process.env.EMAIL_PUBLIC_KEY ||
         process.env.EMAILJS_USER_ID ||
+        process.env.PUBLIC_KEY ||
         process.env.VITE_EMAILJS_PUBLIC_KEY;
       const templateId =
         process.env.EMAILJS_TEMPLATE_ID ||
         process.env.Email_JS_Template_ID ||
         process.env.EMAIL_JS_TEMPLATE_ID ||
+        process.env.EMAIL_TEMPLATE_ID ||
+        process.env.TEMPLATE_ID ||
         process.env.VITE_EMAILJS_TEMPLATE_ID;
       const accessToken =
         process.env.EMAILJS_PRIVATE_KEY ||
         process.env.EMAILJS_ACCESS_TOKEN ||
-        process.env.Email_JS_Private_Key;
+        process.env.Email_JS_Private_Key ||
+        process.env.EMAIL_JS_PRIVATE_KEY;
 
       // 2. Gmail / SMTP App Password Credentials
       const gmailUser = process.env.GMAIL_USER || targetEmail;
@@ -97,7 +103,7 @@ async function startServer() {
             subject: `[Portfolio Inquiry] ${emailSubject} - from ${name}`,
             text: formattedBody,
             html: `
-              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; rounded: 16px;">
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px;">
                 <h2 style="color: #0f172a; margin-top: 0;">New Direct Message from Portfolio</h2>
                 <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
                   <p style="margin: 4px 0;"><strong>Sender Name:</strong> ${name}</p>
@@ -124,7 +130,7 @@ ${message}
         }
       }
 
-      // Try Option B: EmailJS (if public key is available or provided)
+      // Try Option B: EmailJS
       if (!emailDelivered && serviceId && publicKey) {
         try {
           const emailJsPayload: Record<string, unknown> = {
@@ -135,10 +141,16 @@ ${message}
               to_email: targetEmail,
               to_name: 'Yasvanth Kumar',
               from_name: name,
+              name: name,
+              user_name: name,
               from_email: email,
+              email: email,
+              user_email: email,
               reply_to: email,
               subject: emailSubject,
+              email_subject: emailSubject,
               message: message,
+              message_html: message.replace(/\n/g, '<br/>'),
             },
           };
 
@@ -146,11 +158,21 @@ ${message}
             emailJsPayload.accessToken = accessToken;
           }
 
+          // Use request origin or host, with sensible fallback
+          const requestOrigin =
+            (req.headers.origin as string) ||
+            (req.headers.referer ? new URL(req.headers.referer as string).origin : '') ||
+            (req.headers.host ? `http://${req.headers.host}` : '') ||
+            'http://localhost:3000';
+
           const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'User-Agent': 'Yasvanth-Portfolio/1.0',
+              'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+              'Origin': requestOrigin,
+              'Referer': `${requestOrigin}/`,
             },
             body: JSON.stringify(emailJsPayload),
           });

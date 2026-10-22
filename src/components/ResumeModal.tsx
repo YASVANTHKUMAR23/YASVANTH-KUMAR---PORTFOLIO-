@@ -61,19 +61,28 @@ EDUCATION:
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-10 shadow-2xl border border-slate-200 relative my-8 animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-8 md:p-10 shadow-2xl border border-slate-200 relative my-auto sm:my-8 max-h-[92vh] sm:max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-200">
         {/* Header Actions */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
-            <FileText className="w-4 h-4 text-[#2563eb]" />
-            <span>Curriculum Vitae Preview</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 pb-3 sm:pb-4 border-b border-slate-100 shrink-0">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center gap-2 text-slate-800 font-bold text-xs sm:text-sm">
+              <FileText className="w-4 h-4 text-[#2563eb]" />
+              <span>Curriculum Vitae Preview</span>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors sm:hidden"
+              aria-label="Close Preview"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-end w-full sm:w-auto">
             <button
               onClick={handleCopySummary}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
               <span>{copied ? 'Copied' : 'Copy Text'}</span>
@@ -84,7 +93,7 @@ EDUCATION:
               target="_blank"
               rel="noopener noreferrer"
               download="YASVANTH_RESUME.pdf"
-              className="px-3.5 py-1.5 bg-[#0a0f1c] hover:bg-black text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+              className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 bg-[#0a0f1c] hover:bg-black text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download PDF</span>
@@ -92,7 +101,8 @@ EDUCATION:
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors ml-2"
+              className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors ml-2 hidden sm:block cursor-pointer"
+              aria-label="Close Preview"
             >
               <X className="w-5 h-5" />
             </button>
@@ -100,11 +110,11 @@ EDUCATION:
         </div>
 
         {/* Scrollable Resume Body */}
-        <div className="overflow-y-auto pt-6 pr-2 space-y-6 text-slate-700">
+        <div className="overflow-y-auto pt-4 sm:pt-6 pr-1 sm:pr-2 space-y-4 sm:space-y-6 text-slate-700">
           {/* Resume Header */}
-          <div className="border-b border-slate-200 pb-6">
-            <h1 className="text-3xl font-extrabold text-[#0a0f1c] tracking-tight">Yasvanth Kumar N</h1>
-            <p className="text-base font-semibold text-[#2563eb] mt-0.5">Python &amp; Full-Stack AI Engineer</p>
+          <div className="border-b border-slate-200 pb-4 sm:pb-6">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0a0f1c] tracking-tight">Yasvanth Kumar N</h1>
+            <p className="text-sm sm:text-base font-semibold text-[#2563eb] mt-0.5">Python &amp; Full-Stack AI Engineer</p>
 
             <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-3 font-medium">
               <span className="flex items-center gap-1">

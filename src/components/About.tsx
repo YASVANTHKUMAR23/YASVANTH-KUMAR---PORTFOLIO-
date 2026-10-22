@@ -246,35 +246,36 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
 
       {/* Interactive "Know More" Detailed Bio Modal */}
       {isDetailModalOpen && (
-        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-7 sm:p-9 shadow-2xl border border-slate-200 relative my-8 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-7 md:p-9 shadow-2xl border border-slate-200 relative my-auto sm:my-8 max-h-[92vh] sm:max-h-none flex flex-col animate-in zoom-in-95 duration-200">
             {/* Close Button */}
             <button
               onClick={() => setIsDetailModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
+              className="absolute top-3.5 right-3.5 sm:top-6 sm:right-6 p-1.5 sm:p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer z-10"
+              aria-label="Close Bio Modal"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Modal Header */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-[#2563eb] mb-1">
+            <div className="mb-3.5 sm:mb-6 pr-8 sm:pr-0">
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-widest font-bold text-[#2563eb] mb-0.5 sm:mb-1">
                 <span>Engineer Profile</span>
                 <span className="w-6 h-[2px] bg-[#2563eb]" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0a0f1c] tracking-tight">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0a0f1c] tracking-tight">
                 Yasvanth Kumar N
               </h3>
-              <p className="text-slate-500 text-xs sm:text-sm mt-1 flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#2563eb]" />
+              <p className="text-slate-500 text-xs sm:text-sm mt-0.5 sm:mt-1 flex items-center gap-1.5 sm:gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#2563eb] shrink-0" />
                 <span>Mutharasanallur, Tiruchirapalli · B.Tech AI &amp; Data Science (CGPA: 8.5)</span>
               </p>
             </div>
 
             {/* Content Blocks */}
-            <div className="space-y-4 text-slate-600 text-xs sm:text-sm leading-relaxed max-h-[60vh] overflow-y-auto pr-2">
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
-                <h4 className="font-bold text-[#0a0f1c] text-sm flex items-center gap-2">
+            <div className="space-y-3 sm:space-y-4 text-slate-600 text-xs sm:text-sm leading-relaxed max-h-[55vh] sm:max-h-[60vh] overflow-y-auto pr-1 sm:pr-2">
+              <div className="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100 space-y-1.5 sm:space-y-2">
+                <h4 className="font-bold text-[#0a0f1c] text-xs sm:text-sm flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-[#2563eb]" />
                   <span>Core Engineering Focus</span>
                 </h4>
@@ -283,8 +284,8 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
                 </p>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
-                <h4 className="font-bold text-[#0a0f1c] text-sm flex items-center gap-2">
+              <div className="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100 space-y-1.5 sm:space-y-2">
+                <h4 className="font-bold text-[#0a0f1c] text-xs sm:text-sm flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 text-[#2563eb]" />
                   <span>Academic Foundation</span>
                 </h4>
@@ -293,8 +294,8 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
                 </p>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
-                <h4 className="font-bold text-[#0a0f1c] text-sm flex items-center gap-2">
+              <div className="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100 space-y-1.5 sm:space-y-2">
+                <h4 className="font-bold text-[#0a0f1c] text-xs sm:text-sm flex items-center gap-2">
                   <Award className="w-4 h-4 text-[#2563eb]" />
                   <span>Recognitions &amp; Accolades</span>
                 </h4>
@@ -308,7 +309,7 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
             </div>
 
             {/* Modal Footer CTA */}
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+            <div className="mt-4 sm:mt-6 pt-3.5 sm:pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
               <a
                 href="https://github.com/YASVANTHKUMAR23"
                 target="_blank"
@@ -325,7 +326,7 @@ export const About: React.FC<AboutProps> = ({ onNavigateToProjects, onOpenContac
                   setIsDetailModalOpen(false);
                   if (onOpenContact) onOpenContact();
                 }}
-                className="px-5 py-2.5 bg-[#0a0f1c] hover:bg-black text-white text-xs font-semibold rounded-full shadow-md transition-all cursor-pointer"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 bg-[#0a0f1c] hover:bg-black text-white text-xs font-semibold rounded-full shadow-md transition-all cursor-pointer"
               >
                 Get in Touch
               </button>

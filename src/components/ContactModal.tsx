@@ -108,45 +108,45 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-xl w-full p-7 sm:p-9 shadow-2xl border border-slate-200 relative my-8 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-xl w-full p-4 sm:p-7 md:p-9 shadow-2xl border border-slate-200 relative my-auto sm:my-8 max-h-[92vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close Contact Dialog"
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
+          className="absolute top-3.5 right-3.5 sm:top-6 sm:right-6 p-1.5 sm:p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="mb-6">
-          <div className="text-xs uppercase tracking-widest font-semibold text-[#2563eb] mb-1">
+        <div className="mb-3.5 sm:mb-6 pr-8 sm:pr-0">
+          <div className="text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-[#2563eb] mb-0.5 sm:mb-1">
             Let's Collaborate
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0a0f1c] tracking-tight">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0a0f1c] tracking-tight">
             Start a Conversation
           </h3>
-          <p className="text-slate-500 text-xs sm:text-sm mt-1">
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5 sm:mt-1">
             Have a project in mind, need custom AI engineering, or looking for a dedicated Python specialist? Reach out directly.
           </p>
         </div>
 
         {/* Quick Email Copy Strip */}
-        <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex items-center justify-between gap-3 mb-6">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-xl bg-blue-100/60 text-[#2563eb] flex items-center justify-center shrink-0">
-              <Mail className="w-4 h-4" />
+        <div className="bg-slate-50 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-100 flex items-center justify-between gap-2.5 sm:gap-3 mb-3.5 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-2.5 overflow-hidden">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-100/60 text-[#2563eb] flex items-center justify-center shrink-0">
+              <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
             <div className="truncate">
-              <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Direct Email</div>
+              <div className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 tracking-wider">Direct Email</div>
               <div className="text-xs sm:text-sm font-semibold text-[#0a0f1c] truncate">{emailAddress}</div>
             </div>
           </div>
 
           <button
             onClick={handleCopyEmail}
-            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:text-[#0a0f1c] transition-all flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:text-[#0a0f1c] transition-all flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
           >
             {copied ? (
               <>
@@ -237,14 +237,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {errorMessage && (
-              <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+              <div className="p-2.5 sm:p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
                 {errorMessage}
               </div>
             )}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Your Name
               </label>
               <input
@@ -253,12 +253,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Alex Morgan"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
+                className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Your Email
               </label>
               <input
@@ -267,18 +267,18 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="alex@company.com"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
+                className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Project Focus
               </label>
               <select
                 value={formData.projectType}
                 onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
+                className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all"
               >
                 <option value="AI Agents & LLMs">Autonomous AI Agents &amp; LLM Systems</option>
                 <option value="Python Microservices">Python Microservices &amp; APIs</option>
@@ -289,7 +289,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                 Project Details
               </label>
               <textarea
@@ -298,14 +298,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Tell me about your timeline, tech requirements, or goals..."
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all resize-none"
+                className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-[#0a0f1c] focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:bg-white transition-all resize-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#0a0f1c] hover:bg-black text-white text-sm font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full py-2.5 sm:py-3 bg-[#0a0f1c] hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
@@ -323,13 +323,13 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         )}
 
         {/* Social Links Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+        <div className="mt-4 sm:mt-6 pt-3.5 sm:pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs text-slate-500">
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-[#2563eb]" />
             <span>Tamil Nadu, India</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <a
               href="https://www.linkedin.com/in/yasvanth-kumar/"
               target="_blank"

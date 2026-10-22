@@ -342,17 +342,18 @@ export const Projects: React.FC = () => {
 
       {/* Project Detail Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-9 shadow-2xl border border-slate-200 relative my-8 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-7 md:p-9 shadow-2xl border border-slate-200 relative my-auto sm:my-8 max-h-[92vh] sm:max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer z-10 bg-white/80 backdrop-blur-xs"
+              className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 p-1.5 sm:p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer z-10 bg-white/90 backdrop-blur-xs shadow-xs"
+              aria-label="Close Project Detail"
             >
               <X className="w-5 h-5" />
             </button>
 
             {selectedProject.image && (
-              <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden mb-5 border border-slate-200/80 bg-slate-50 flex items-center justify-center shadow-xs">
+              <div className="w-full h-40 sm:h-52 md:h-60 rounded-xl sm:rounded-2xl overflow-hidden mb-3.5 sm:mb-5 border border-slate-200/80 bg-slate-50 flex items-center justify-center shadow-xs">
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
@@ -361,28 +362,28 @@ export const Projects: React.FC = () => {
               </div>
             )}
 
-            <span className="text-xs font-bold uppercase tracking-wider text-[#2563eb]">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#2563eb]">
               {selectedProject.category}
             </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0a0f1c] mt-1 mb-3">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0a0f1c] mt-0.5 sm:mt-1 mb-2 sm:mb-3">
               {selectedProject.title}
             </h3>
 
-            <div className="bg-blue-50/60 p-4 rounded-xl mb-5 border border-blue-100">
-              <span className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block mb-0.5">
+            <div className="bg-blue-50/60 p-3 sm:p-4 rounded-xl mb-3.5 sm:mb-5 border border-blue-100">
+              <span className="text-[10px] sm:text-[11px] font-mono text-slate-500 uppercase tracking-wider block mb-0.5">
                 Key Performance Impact
               </span>
-              <p className="text-sm font-bold text-[#0a0f1c]">{selectedProject.metrics}</p>
+              <p className="text-xs sm:text-sm font-bold text-[#0a0f1c]">{selectedProject.metrics}</p>
             </div>
 
-            <p className="text-slate-600 text-sm leading-relaxed mb-5">
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-3.5 sm:mb-5">
               {selectedProject.longDescription}
             </p>
 
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-3">
+            <h4 className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-800 mb-2 sm:mb-3">
               Engineering Architecture Highlights:
             </h4>
-            <ul className="space-y-2 mb-6">
+            <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
               {selectedProject.highlights.map((h, i) => (
                 <li key={i} className="text-xs sm:text-sm text-slate-600 flex items-start gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#2563eb] mt-1.5 shrink-0" />
@@ -391,7 +392,7 @@ export const Projects: React.FC = () => {
               ))}
             </ul>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3.5 sm:pt-4 border-t border-slate-100">
               <div className="flex flex-wrap gap-1.5">
                 {selectedProject.tags.map((t) => (
                   <TechToolPill key={t} tool={t} />
@@ -402,7 +403,7 @@ export const Projects: React.FC = () => {
                 href={selectedProject.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0a0f1c] text-white text-xs font-semibold rounded-full hover:bg-black transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#0a0f1c] text-white text-xs font-semibold rounded-full hover:bg-black transition-colors shrink-0"
               >
                 <Github className="w-4 h-4" />
                 <span>Visit Repository</span>
